@@ -120,6 +120,7 @@ export function SignUpScreen() {
       });
 
       if (profileError) {
+        await supabase.auth.signOut();
         setLoading(false);
         Alert.alert("Profile Error", profileError.message);
         return;
@@ -127,7 +128,13 @@ export function SignUpScreen() {
     }
 
     setLoading(false);
-    router.replace("/(app)/home");
+
+    if (data.session) {
+      router.replace("/(app)/home");
+    } else {
+      Alert.alert("Check your email", "Please verify your email address to continue.");
+      router.replace("/(auth)/sign-in");
+    }
   }
 
   return (
